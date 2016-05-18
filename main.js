@@ -1,5 +1,4 @@
 !function() {
-    
     // 将HTML转换为节点
     function html2node(str) {
         var container = document.createElement('div');
@@ -27,14 +26,25 @@
         var current = node.className || "";
         node.className = (" " + current + " ").replace(" " + className + " ", " ").trim();
     }
-
+    // 帮助函数：has ClassName
+    function hasClass(node,className) {
+        var current = node.className || "";
+        if (current.match(new RegExp('(\\s|^)'+className+'(\\s|$)'))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    // 实例
     var template = 
     '<div class="m-slider">\
         <div class="slide"><img></div>\
         <div class="slide"><img></div>\
         <div class="slide"><img></div>\
     </div>';
-
+    
+    // Slider
     function Slider(opt) {
         extend(this,opt);
         // 容器节点，设置overflow: hidden
@@ -42,11 +52,9 @@
         this.container.style.overflow = 'hidden';
         // 组件节点
         this.slider = this._layout.cloneNode(true);
-        // this.m_cursor = document.querySelector('.m-cursor').cloneNode(true);
         this.slides = [].slice.call(this.slider.querySelectorAll('.slide'));
         this.imgs = [].slice.call(this.slider.querySelectorAll('.slide img'));
         this.cursors = [].slice.call(document.querySelectorAll('.m-cursor > .cursor'));
-        
         // 初始化
         this.pageNum = this.images.length; 
         this.pageIndex = this.pageIndex || 0;
@@ -56,13 +64,9 @@
         this.nav();
         this.next();
         this.prev();
-        
-        // this.cursors[4].addEventListener('click',function() {
-        //     this.onnav();
-        // },false);
-        
     }
-
+    
+    // 原型extend
     extend(Slider.prototype,{
         _layout: html2node(template),
         // 初始设置 默认显示的图片
@@ -75,9 +79,7 @@
             let that = this;
             next.addEventListener('click', function(){
                 that._step(1);
-            },false);
-            
-            
+            },false); 
         },
         // 上一张
         prev: function() {
@@ -100,8 +102,17 @@
         // 图片切换逻辑控制
         _step: function(offset) {
             this.pageIndex += offset;
+            // 控制cursors突出显示
+            let that = this;
+            this.cursors.forEach(function(cursor, index) {
+                if (index === ((that.pageIndex % that.pageNum) + that.pageNum) % that.pageNum) {
+                    addClass(cursor,'z-active');
+                } else {
+                    removeClass(cursor,'z-active');
+                }
+            });
             // slideIndex取值为0/1/2；通过parseInt(this.pageIndex / 3)取整数
-            let  slideIndex = this.pageIndex - 3*parseInt(this.pageIndex / 3);
+            let slideIndex = this.pageIndex - 3*parseInt(this.pageIndex / 3);
             if (slideIndex >= 0) {
                 this.slideIndex = slideIndex;
             }else {
@@ -117,7 +128,7 @@
             this.imgs[this.slideIndex].src = this.images[((this.pageIndex % this.pageNum) + this.pageNum) % this.pageNum];
         }
     })
-
+    
     // 暴露API到全局
     window.Slider = Slider;
 }()
