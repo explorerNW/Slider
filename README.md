@@ -23,20 +23,32 @@
 1. 接口示例说明
   ```
   var slider = new Slider({
-        //视口容器
+        // 视口容器
         container: document.body,
-        //图片列表
+        // 图片列表
         images: [
-            "imgs/1.jpg",
-            "imgs/2.jpg",
-            "imgs/3.jpg",
-            "imgs/4.jpg",
-            "imgs/5.jpg",
-            "imgs/6.jpg"
+            'imgs/slideshow/1.jpg',
+            'imgs/slideshow/2.jpg',
+            'imgs/slideshow/3.jpg',
+            'imgs/slideshow/4.jpg',
+            'imgs/slideshow/5.jpg',
+            'imgs/slideshow/6.jpg'
         ],
+        // 图片介绍
+        imgIntro: [
+            '1 Hello',
+            '2 Hello',
+            '3 Hello',
+            '4 Hello',
+            '5 Hello',
+            '6 Hello',
+        ],
+        imgPosition: 'center',
+        // 自动轮播间隔
+        autotime: 10000,
         // 默认显示的图片页数 从0开始计算
-        pageIndex: 4
-    });
+        pageIndex: 2
+    }); 
   ```
   
 2. [Demo](http://watermelonfruit.github.io/Slider/)
