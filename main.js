@@ -35,14 +35,15 @@
             return false;
         }
     }
-    
     // 实例
-    var template = 
+    var template_slider = 
     '<div class="m-slider">\
-        <div class="slide"><img></div>\
-        <div class="slide"><img></div>\
-        <div class="slide"><img></div>\
+        <div class="slide"><span class="slide-intro"></span></div>\
+        <div class="slide"><span class="slide-intro"></span></div>\
+        <div class="slide"><span class="slide-intro"></span></div>\
     </div>';
+    var template_ctrl_prev = '<span class="slider-ctrl-prev"></span>';
+    var template_ctrl_next = '<span class="slider-ctrl-next"></span>';
     
     // Slider
     function Slider(opt) {
@@ -53,62 +54,86 @@
         // 组件节点
         this.slider = this._layout.cloneNode(true);
         this.slides = [].slice.call(this.slider.querySelectorAll('.slide'));
-        this.imgs = [].slice.call(this.slider.querySelectorAll('.slide img'));
-        this.cursors = [].slice.call(document.querySelectorAll('.m-cursor > .cursor'));
+        this.slidesIntro = [].slice.call(this.slider.querySelectorAll('.slide-intro'));      
         // 初始化
         this.pageNum = this.images.length; 
+        this.imgPosition = this.imgPosition || '0% 0%';
         this.pageIndex = this.pageIndex || 0;
         this.slideIndex = 0;
         this.container.appendChild(this.slider);
+        this.container.appendChild(html2node(template_ctrl_prev));
+        this.container.appendChild(html2node(template_ctrl_next));
+        this._conset();
+        this.cons = [].slice.call(this.container.querySelectorAll('.slider-ctrl-cons'));
         this._init();
+        this.cut();        
+        this.auto();
         this.nav();
-        this.next();
-        this.prev();
     }
-    
     // 原型extend
     extend(Slider.prototype,{
-        _layout: html2node(template),
+        _layout: html2node(template_slider),
         // 初始设置 默认显示的图片
         _init: function() {
-            this._step(0);
+            this._step(0);       
         },
-        // 下一张
-        next: function() {
-            let next = document.querySelector('.m-cursor > .next');
-            let that = this;
-            next.addEventListener('click', function(){
-                that._step(1);
-            },false); 
+        // 左右切换
+        cut: function() {
+            // 左/右 上一页/下一页 切换控制
+            let prev = this.container.querySelector('.slider-ctrl-prev');
+            let next = this.container.querySelector('.slider-ctrl-next');
+            prev.addEventListener('click',function() {
+                this._step(-1);
+            }.bind(this),false);
+            next.addEventListener('click',function() {
+                this._step(1);
+            }.bind(this),false);
+            // 点击slider左边/右边 上一页/下一页
+            this.slider.addEventListener('click', function(e){
+                if (e.pageX < this.slider.offsetWidth/2) {
+                    this._step(-1);
+                }else {
+                    this._step(1);
+                }
+            }.bind(this),false) 
         },
-        // 上一张
-        prev: function() {
-            let prev = document.querySelector('.m-cursor > .prev');
-            let that = this;
-            prev.addEventListener('click', function(){
-                that._step(-1);
-            },false);
+        // 自动轮播
+        auto: function() {
+            setInterval(function() {
+                this._step(1)
+            }.bind(this),this.autotime);            
         },
         // 直接定位
         nav: function() {
-            let that = this;
-            for (let i = 0; i < this.cursors.length; i++ ) {
-                this.cursors[i].addEventListener('click',function() {
-                    that.pageIndex = i;
-                    that._step(0);
-                },false); 
+            for (let i = 0; i < this.cons.length; i++ ) {                           
+                this.cons[i].addEventListener('click',function() {
+                    this.pageIndex = i;
+                    this._step(0);
+                }.bind(this),false); 
             }
+        },
+        // 直接定位按钮初始化
+        _conset: function() {
+            let ul = document.createElement('ul');
+            ul.className = 'm-slider-ctrl-con';
+            this.container.appendChild(ul);
+            for (let i = 0; i < this.pageNum; i++) {
+                let li = document.createElement('li');
+                li.className = 'slider-ctrl-cons';
+                ul.appendChild(li);
+            }
+            
         },
         // 图片切换逻辑控制
         _step: function(offset) {
             this.pageIndex += offset;
-            // 控制cursors突出显示
+            // 控制cons激活显示
             let that = this;
-            this.cursors.forEach(function(cursor, index) {
+            this.cons.forEach(function(con, index) {
                 if (index === ((that.pageIndex % that.pageNum) + that.pageNum) % that.pageNum) {
-                    addClass(cursor,'z-active');
+                    addClass(con,'z-active');
                 } else {
-                    removeClass(cursor,'z-active');
+                    removeClass(con,'z-active');
                 }
             });
             // slideIndex取值为0/1/2；通过parseInt(this.pageIndex / 3)取整数
@@ -124,8 +149,9 @@
             this.slides[this.slideIndex].style.left = (this.pageIndex*100) + '%';
             this.slides[(this.slideIndex + 4)%3].style.left = ((this.pageIndex + 1)*100) + '%';
             this.slides[(this.slideIndex + 2)%3].style.left = ((this.pageIndex - 1)*100) + '%';
-            // 设置图片src
-            this.imgs[this.slideIndex].src = this.images[((this.pageIndex % this.pageNum) + this.pageNum) % this.pageNum];
+            // 设置图片(background)url
+            this.slides[this.slideIndex].style.background ='url(' + this.images[((this.pageIndex % this.pageNum) + this.pageNum) % this.pageNum] + ')' + this.imgPosition + '/ 100% 100%' + 'no-repeat';
+            this.slidesIntro[this.slideIndex].innerText =this.imgIntro[((this.pageIndex % this.pageNum) + this.pageNum) % this.pageNum];
         }
     })
     
