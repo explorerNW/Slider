@@ -1,0 +1,93 @@
+html,body {
+    height: 100%;
+    width: 100%;
+}
+* {
+    padding: 0;
+    margin: 0;    
+}
+.m-slider {
+    background-color: #fff;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    transition-property: transform;
+    transition-duration: 1s;
+    transition-timing-function: ease-out;
+}
+.slide-intro {
+    display: none;
+    position: absolute;
+    /*height: 10px;*/
+    left: 0;
+    right: 0;
+    bottom: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6); 
+}
+/* slides */
+.m-slider .slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #fff;
+}
+.m-slider .slide.z-active {
+    transition: opacity .2s ease-in;
+}
+.m-slider .slide h2 {
+    margin-top: 40%;
+}
+/* slide crtl */
+.m-slider-ctrl-con {
+    display: none;
+    z-index: 1;
+    text-align: center;
+    position: absolute;
+    list-style: none;
+    height: 30px;
+    line-height: 30px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.m-slider-ctrl-con li {
+    width: 5px;
+    height: 5px;
+    color: #aaa;
+    border-radius: 50%;
+    border: 1px solid #999;
+    margin-right: 4px;
+    /*list-style: none;*/
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color .5s;
+}
+.m-slider-ctrl-con li:hover, .m-slider-ctrl-con li.z-active {
+    background-color: #999;
+    color: #fff;
+}
+.slider-ctrl-prev {
+    z-index: 1;
+    position: absolute;
+    right: 90%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    /*opacity: 0;*/
+    cursor: url(../imgs/cursor/slider-prev.cur),pointer;
+}
+.slider-ctrl-next {
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    left: 90%;
+    top: 0;
+    bottom: 0;
+    /*opacity: 0;*/
+    cursor: url(../imgs/cursor/slider-next.cur),pointer;
+}

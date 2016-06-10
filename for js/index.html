@@ -1,0 +1,76 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Slider</title>
+    <meta name="theme-color" content="#f8f8f8">
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <ul class="m-slider-ctrl-con">
+        <li class="slider-ctrl-cons"></li>
+        <li class="slider-ctrl-cons"></li>
+        <li class="slider-ctrl-cons"></li>
+        <li class="slider-ctrl-cons"></li>
+        <li class="slider-ctrl-cons"></li>
+        <li class="slider-ctrl-cons"></li>
+    </ul>
+    <span class="slider-ctrl-prev"></span>
+    <span class="slider-ctrl-next"></span>
+
+    <script src="slider.js"></script>
+    <script>
+        let slider = new Slider({
+            // 视口容器
+            container: document.body,
+            // 图片列表
+            images: [
+                '../imgs/slideshow/1.jpg',
+                '../imgs/slideshow/2.jpg',
+                '../imgs/slideshow/3.jpg',
+                '../imgs/slideshow/4.jpg',
+                '../imgs/slideshow/5.jpg',
+                '../imgs/slideshow/6.jpg'
+            ],
+            // 图片介绍
+            imgIntro: [
+                '1 Hello',
+                '2 Hello',
+                '3 Hello',
+                '4 Hello',
+                '5 Hello',
+                '6 Hello',
+            ],
+            // 默认显示的图片页数 从0开始计算
+            pageIndex: 2
+        }); 
+
+        // 上一页/下一页 切换控制
+        let prev = document.querySelector('.slider-ctrl-prev');
+        let next = document.querySelector('.slider-ctrl-next');
+        prev.addEventListener('click',function() {
+            slider._step(-1);
+        },false);
+        next.addEventListener('click',function() {
+            slider._step(1);
+        },false);
+
+        // // 点击slider左边/右边 上一页/下一页
+        // slider.slider.addEventListener('click', function(e){
+        //     if (e.pageX < this.offsetWidth/2) {
+        //         slider._step(-1);
+        //     }else {
+        //         slider._step(1);
+        //     }
+        // },false);
+
+        // 自动轮播
+        setInterval(function() {
+            slider._step(1);
+        },10000); 
+    </script>
+</body> 
+</html> 
