@@ -72,21 +72,16 @@
         },
         // 直接定位
         nav: function() {
-            for (let i = 0; i < this.cons.length; i++ ) {                           
-                this.cons[i].addEventListener('click',function() {
-                    this.pageIndex = i;
-                    this._step(0);
-                }.bind(this),false); 
-            }
-        },
-        // 图片切换逻辑控制
-        _step: function(offset) {
-            this.pageIndex += offset;
-            // 控制cons激活显示
             if (this.ctrlCon) {
                 this.ctrlCon.style.display = 'block';
                 let that = this;
                 this.cons.forEach(function(con, index) {
+                    // 点击con直接切换到目标slide
+                    con.addEventListener('click', function() {
+                        that.pageIndex = index;
+                        that._step(0);
+                    });
+                    // 控制cons激活显示
                     if (index === ((that.pageIndex % that.pageNum) + that.pageNum) % that.pageNum) {
                         addClass(con,'z-active');
                     } else {
@@ -94,6 +89,10 @@
                     }
                 });
             }
+        },
+        // 图片切换逻辑控制
+        _step: function(offset) {
+            this.pageIndex += offset;
             // slideIndex取值为0/1/2；通过parseInt(this.pageIndex / 3)取整数
             let slideIndex = this.pageIndex - 3*parseInt(this.pageIndex / 3);
             if (slideIndex >= 0) {
