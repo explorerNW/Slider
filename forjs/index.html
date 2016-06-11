@@ -52,25 +52,26 @@
         let prev = document.querySelector('.slider-ctrl-prev');
         let next = document.querySelector('.slider-ctrl-next');
         prev.addEventListener('click',function() {
-            slider._step(-1);
+            slider.prev();
         },false);
         next.addEventListener('click',function() {
-            slider._step(1);
+            slider.next();
         },false);
 
         // // 点击slider左边/右边 上一页/下一页
         // slider.slider.addEventListener('click', function(e){
         //     if (e.pageX < this.offsetWidth/2) {
-        //         slider._step(-1);
+        //         slider.prev();
         //     }else {
-        //         slider._step(1);
+        //         slider.next();
         //     }
         // },false);
 
         // 自动轮播
         setInterval(function() {
-            slider._step(1);
+            slider.next();
         },10000); 
+        
     </script>
 </body> 
 </html> 

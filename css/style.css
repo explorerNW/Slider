@@ -36,7 +36,7 @@ html,body {
     vertical-align: middle;
     background-color: #fff;
 }
-.m-slider .slide.z-active {
+.m-slider .slide .z-active {
     transition: opacity .2s ease-in;
 }
 .m-slider .slide h2 {

@@ -36,7 +36,7 @@
         }
     }
     // 实例
-    let template_slider = 
+    let template = 
     '<div class="m-slider">\
         <div class="slide"><span class="slide-intro"></span></div>\
         <div class="slide"><span class="slide-intro"></span></div>\
@@ -59,40 +59,29 @@
         this.pageNum = this.images.length; 
         this.pageIndex = this.pageIndex || 0;
         this.slideIndex = 0;
-        this._init();      
-        this.nav();
+        this._init(); 
         this.container.appendChild(this.slider);
     }
     // 原型extend
     extend(Slider.prototype,{
-        _layout: html2node(template_slider),
+        _layout: html2node(template),
         // 初始设置 默认显示的图片
         _init: function() {
             this._step(0);       
         },
-        // 直接定位
-        nav: function() {
-            if (this.ctrlCon) {
-                this.ctrlCon.style.display = 'block';
-                let that = this;
-                this.cons.forEach(function(con, index) {
-                    // 点击con直接切换到目标slide
-                    con.addEventListener('click', function() {
-                        that.pageIndex = index;
-                        that._step(0);
-                    });
-                    // 控制cons激活显示
-                    if (index === ((that.pageIndex % that.pageNum) + that.pageNum) % that.pageNum) {
-                        addClass(con,'z-active');
-                    } else {
-                        removeClass(con,'z-active');
-                    }
-                });
-            }
+        prev: function() {
+            this._step(-1);
+        },
+        next: function() {
+            this._step(1);
         },
         // 图片切换逻辑控制
         _step: function(offset) {
             this.pageIndex += offset;
+            // 直接定位
+            if (this.ctrlCon) {
+                this._nav();
+            }
             // slideIndex取值为0/1/2；通过parseInt(this.pageIndex / 3)取整数
             let slideIndex = this.pageIndex - 3*parseInt(this.pageIndex / 3);
             if (slideIndex >= 0) {
@@ -113,6 +102,24 @@
                 this.slidesIntro[this.slideIndex].style.display = 'block';
                 this.slidesIntro[this.slideIndex].innerText = this.imgIntro[((this.pageIndex % this.pageNum) + this.pageNum) % this.pageNum];
             }
+        },
+        // 直接定位
+        _nav: function() {
+            this.ctrlCon.style.display = 'block';
+            let that = this;
+            this.cons.forEach(function(con, index) {
+                // 点击con直接切换到目标slide
+                con.addEventListener('click', function() {
+                    that.pageIndex = index;
+                    that._step(0);
+                },false);
+                // 控制cons激活显示
+                if (index === ((that.pageIndex % that.pageNum) + that.pageNum) % that.pageNum) {
+                    addClass(con,'z-active');
+                } else {
+                    removeClass(con,'z-active');
+                }
+            });
         }
     })
     
