@@ -1,12 +1,12 @@
 !(() => {
     // 将HTML转换为节点
-    let html2node = (str) => {
+    const html2node = (str) => {
         let container = document.createElement('div');
         container.innerHTML = str;
         return container.children[0];
     }
     // 帮助函数：赋值、扩展
-    let extend = (a,b) => {
+    const extend = (a,b) => {
         for (let i in b) {
             if (typeof a[i] === 'undefined') {
                 a[i] = b[i];
@@ -15,19 +15,19 @@
         return a;
     }
     // 帮助函数：add ClassName
-    let addClass = (node, className) => {
+    const addClass = (node, className) => {
         let current = node.className || "";
         if ((` ${current} `).indexOf(` ${className} `) === -1) {
         node.className = current? ( `${current} ${className}` ) : className;
         }
     }   
     // 帮助函数：remove ClassName
-    let removeClass = (node, className) => {
+    const removeClass = (node, className) => {
         let current = node.className || "";
         node.className = (` ${current} `).replace(` ${className} `, " ").trim();
     }
     // 帮助函数：has ClassName
-    let hasClass = (node,className) => {
+    const hasClass = (node,className) => {
         let current = node.className || "";
         if (current.match(new RegExp(`(\\s|^)${className}(\\s|$)`))) {
             return true;
@@ -36,7 +36,7 @@
         }
     }
     // 实例
-    let template = 
+    const template = 
     '<div class="m-slider">\
         <div class="slide"><span class="slide-intro"></span></div>\
         <div class="slide"><span class="slide-intro"></span></div>\
@@ -123,6 +123,14 @@
         }
     })
     
-    // 暴露API到全局
-    window.Slider = Slider;
+    // API支持:  Amd || Commonjs  || Global 
+    if (typeof exports === 'object') {
+        module.exports = Slider;
+    } else if (typeof define === 'function' && define.amd) {
+        define(function() {
+        return Slider;
+        });
+    } else {
+        window.Slider = Slider;
+    }
 })()
