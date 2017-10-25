@@ -6,7 +6,7 @@
         return container.children[0];
     }
     // 帮助函数：赋值、扩展
-    const extend = (a,b) => {
+    const extend = (a, b) => {
         for (let i in b) {
             if (typeof a[i] === 'undefined') {
                 a[i] = b[i];
@@ -18,16 +18,16 @@
     const addClass = (node, className) => {
         let current = node.className || "";
         if ((` ${current} `).indexOf(` ${className} `) === -1) {
-        node.className = current? ( `${current} ${className}` ) : className;
+            node.className = current ? (`${current} ${className}`) : className;
         }
-    }   
+    }
     // 帮助函数：remove ClassName
     const removeClass = (node, className) => {
         let current = node.className || "";
         node.className = (` ${current} `).replace(` ${className} `, " ").trim();
     }
     // 帮助函数：has ClassName
-    const hasClass = (node,className) => {
+    const hasClass = (node, className) => {
         let current = node.className || "";
         if (current.match(new RegExp(`(\\s|^)${className}(\\s|$)`))) {
             return true;
@@ -36,16 +36,17 @@
         }
     }
     // 实例
-    const template = 
-    '<div class="m-slider">\
+    const template =
+        '<div class="m-slider">\
         <div class="slide"><span class="slide-intro"></span></div>\
         <div class="slide"><span class="slide-intro"></span></div>\
         <div class="slide"><span class="slide-intro"></span></div>\
     </div>';
-    
+
     // Slider
     function Slider(opt) {
-        extend(this,opt);
+        console.info("%c" + this, "font-size:20px;color:#a0bc0f");
+        extend(this, opt);
         // 容器节点，设置overflow: hidden
         this.container = this.container || document.body;
         this.container.style.overflow = 'hidden';
@@ -54,20 +55,20 @@
         this.slides = Array.from(this.slider.querySelectorAll('.slide'));
         this.slidesIntro = Array.from(this.slider.querySelectorAll('.slide-intro'));
         this.ctrlCon = this.container.querySelector('.m-slider-ctrl-con');
-        this.cons = Array.from(this.container.querySelectorAll('.slider-ctrl-cons'));    
+        this.cons = Array.from(this.container.querySelectorAll('.slider-ctrl-cons'));
         // 初始化
-        this.pageNum = this.images.length; 
+        this.pageNum = this.images.length;
         this.pageIndex = this.pageIndex || 0;
         this.slideIndex = 0;
-        this._init(); 
+        this._init();
         this.container.appendChild(this.slider);
     }
     // 原型extend
-    extend(Slider.prototype,{
+    extend(Slider.prototype, {
         _layout: html2node(template),
         // 初始设置 默认显示的图片
         _init() {
-            this._step(0); 
+            this._step(0);
         },
         prev() {
             this._step(-1);
@@ -83,20 +84,20 @@
                 this._nav();
             }
             // slideIndex取值为0/1/2；通过parseInt(this.pageIndex / 3)取整数
-            let slideIndex = this.pageIndex - 3*parseInt(this.pageIndex / 3);
+            let slideIndex = this.pageIndex - 3 * parseInt(this.pageIndex / 3);
             if (slideIndex >= 0) {
                 this.slideIndex = slideIndex;
-            }else {
+            } else {
                 this.slideIndex = -1 * slideIndex;
-            } 
+            }
             this.slider.style.transitionDuration = '.5s';
             // 偏移量
-            this.slider.style.transform = `translateX(${-this.pageIndex*100}%)`;
-            this.slides[this.slideIndex].style.left = `${this.pageIndex*100}%`;
-            this.slides[(this.slideIndex + 4)%3].style.left = `${(this.pageIndex + 1)*100}%`;
-            this.slides[(this.slideIndex + 2)%3].style.left = `${(this.pageIndex - 1)*100}%`;
+            this.slider.style.transform = `translateX(${-this.pageIndex * 100}%)`;
+            this.slides[this.slideIndex].style.left = `${this.pageIndex * 100}%`;
+            this.slides[(this.slideIndex + 4) % 3].style.left = `${(this.pageIndex + 1) * 100}%`;
+            this.slides[(this.slideIndex + 2) % 3].style.left = `${(this.pageIndex - 1) * 100}%`;
             // 设置图片(background)url
-            this.slides[this.slideIndex].style.background =`url(${this.images[((this.pageIndex % this.pageNum) + this.pageNum) % this.pageNum]})0 0 / 100% 100%no-repeat`;
+            this.slides[this.slideIndex].style.background = `url(${this.images[((this.pageIndex % this.pageNum) + this.pageNum) % this.pageNum]})0 0 / 100% 100%no-repeat`;
             // 设置图片说明文字
             if (this.imgIntro) {
                 this.slidesIntro[this.slideIndex].style.display = 'block';
@@ -112,23 +113,23 @@
                 con.addEventListener('click', () => {
                     that.pageIndex = index;
                     that._step(0);
-                },false);
+                }, false);
                 // 控制cons激活显示
                 if (index === ((that.pageIndex % that.pageNum) + that.pageNum) % that.pageNum) {
-                    addClass(con,'z-active');
+                    addClass(con, 'z-active');
                 } else {
-                    removeClass(con,'z-active');
+                    removeClass(con, 'z-active');
                 }
             });
         }
     })
-    
+
     // API支持:  Amd || Commonjs  || Global 
     if (typeof exports === 'object') {
         module.exports = Slider;
     } else if (typeof define === 'function' && define.amd) {
-        define(function() {
-        return Slider;
+        define(function () {
+            return Slider;
         });
     } else {
         window.Slider = Slider;
